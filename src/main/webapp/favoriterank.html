@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>收藏排行榜</title>
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/ranking-list.css">
+    <script src="js/jquery-3.3.1.js"></script>
+</head>
+<body>
+<!--引入头部-->
+<div id="header"></div>
+<div class="contant">
+    <div class="shaixuan">
+        <span>线路名称</span>
+        <input type="text" id="search_name">
+        <span>金额</span>
+        <input type="text" id="start_price">~<input type="text" id="end_price">
+        <button onclick="getfavoriterank(1)">搜索</button>
+    </div>
+    <div class="list clearfix">
+        <ul id="route_list">
+            <li>
+                <span class="num one">1</span>
+                <a href="route_detail.html"><img src="images/jiangxuan_4.jpg" alt=""></a>
+                <h4><a href="route_detail.html">【尾单特卖】全国-曼谷6-7天自由行 泰国出境旅游 特价往6-7天自由行 泰国出境旅游 特价往..</a></h4>
+                <p>
+                    <b class="price">&yen;<span>899</span>起</b>
+                    <span class="shouchang">已收藏450次</span>
+                </p>
+            </li>
+            <li>
+                <span class="num two">2</span>
+                <a href="route_detail.html"><img src="images/jiangxuan_4.jpg" alt=""></a>
+                <h4><a href="route_detail.html">【尾单特卖】全国-曼谷6-7天自由行 泰国出境旅游 特价往6-7天自由行 泰国出境旅游 特价往..</a></h4>
+                <p>
+                    <b class="price">&yen;<span>899</span>起</b>
+                    <span class="shouchang">已收藏450次</span>
+                </p>
+            </li>
+            <li>
+                <span class="num">3</span>
+                <a href="route_detail.html"><img src="images/jiangxuan_4.jpg" alt=""></a>
+                <h4><a href="route_detail.html">【尾单特卖】全国-曼谷6-7天自由行 泰国出境旅游 特价往6-7天自由行 泰国出境旅游 特价往..</a></h4>
+                <p>
+                    <b class="price">&yen;<span>899</span>起</b>
+                    <span class="shouchang">已收藏450次</span>
+                </p>
+            </li>
+        </ul>
+    </div>
+    <div class="pageNum">
+        <ul id="page_bar">
+            <!-- <li><a href="">首页</a></li>
+             <li class="threeword"><a href="#">上一页</a></li>
+             <li><a href="#">1</a></li>
+             <li><a href="#">2</a></li>
+             <li><a href="#">3</a></li>
+             <li><a href="#">4</a></li>
+             <li><a href="#">5</a></li>
+             <li><a href="#">6</a></li>
+             <li><a href="#">7</a></li>
+             <li><a href="#">8</a></li>
+             <li><a href="#">9</a></li>
+             <li><a href="#">10</a></li>
+             <li class="threeword"><a href="javascript:;">下一页</a></li>
+             <li class="threeword"><a href="javascript:;">末页</a></li>-->
+        </ul>
+    </div>
+</div>
+<script>
+
+    function getfavoriterank(page) {
+        var search_name = $('#search_name').val();
+        var start_price = $('#start_price').val();
+        var end_price = $('#end_price').val();
+
+
+        var rank;
+        $.ajax({
+            url: "/favorite?method=favoriterankByPage",
+            data: {"curPage": page, "searchName": search_name, "startPrice": start_price, "endPrice": end_price},
+            dataType: "json",
+            success: function (res) {
+
+                //routelist 分页列表
+                $('#route_list').empty();
+                var rank = (res.currentPage - 1) * res.pageSize + 1;
+                $(res.routeList).each(function (index, elem) {
+                    var $li = $("<li>\n" +
+                        "                        <span class=\"num\">" + rank + "</span>\n" +
+                        "                        <a href=\"route_detail.html?rid=" + elem.rid + "\"><img src=\"" + elem.rimage + "\" alt=\"\"></a>\n" +
+                        "                        <h4><a href=\"route_detail.html?rid=" + elem.rid + "\">" + elem.rname + "</a></h4>\n" +
+                        "                        <p>\n" +
+                        "                            <b class=\"price\">¥<span>" + elem.price + "</span>起</b>\n" +
+                        "                            <span class=\"shouchang\">已收藏" + elem.count + "次</span>\n" +
+                        "                        </p>\n" +
+                        "                    </li>");
+                    if (rank == 1) {
+                        $($li.children('span').get(0)).addClass("one");
+                    }
+                    if (rank == 2) {
+                        $($li.children('span').get(0)).addClass("two");
+                    }
+                    rank++;
+                    $('#route_list').append($li)
+                });
+
+                if (res.totalPage <= 1) {
+                    return;
+                }
+                //分页条
+                var $pageBar = $('#page_bar');
+                $pageBar.empty();
+                //首页
+                $pageBar.append("<li><a href=\"javascript:;\" rel='1'>首页</a></li>");
+                //上一页
+                if (res.currentPage > 1) {
+                    $pageBar.append("<li class=\"threeword\"><a href=\"javascript:;\" rel=\"" + res.prePage + "\">上一页</a></li>");
+                }
+                //分页数字
+                for (var i = res.startPage; i <= res.endPage; i++) {
+                    var $li_a = $("<li><a href=\"javascript:;\" rel=\"" + i + "\">" + i + "</a></li>");
+                    if (res.currentPage == i) {
+                        $li_a.addClass("curPage")
+                    }
+                    $pageBar.append($li_a)
+                }
+                //下一页
+                if (res.currentPage < res.totalPage) {
+                    $pageBar.append("<li class=\"threeword\"><a href=\"javascript:;\" rel=\"" + res.nextPage + "\">下一页</a></li>");
+                }
+                //末页
+                $pageBar.append("<li class=\"threeword\"><a href=\"javascript:;\" rel=\"" + res.totalPage + "\">末页</a></li>")
+
+            }
+
+        })
+    }
+
+    //jquery事件委托,调用分页请求
+    $(function () {
+        $('#page_bar').on("click", "a", function (e) {
+            var target = $(e.target);
+            var page = target.attr("rel");
+            console.log(target.parent().attr("class"))
+            if (target.parent().attr("class") == 'curPage') {
+                return;
+            }
+            getfavoriterank(page);
+            e.stopPropagation()
+        })
+    })
+    getfavoriterank(1);//初次访问加载分页数据
+</script>
+<!--导入底部-->
+<div id="footer"></div>
+<!--导入布局js，共享header和footer-->
+<script type="text/javascript" src="js/include.js"></script>
+</body>
+</html>

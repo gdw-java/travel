@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/forget.css">
+    <script src="js/jquery-3.3.1.js"></script>
+</head>
+<body>
+<div class="top-nav">
+    <div class="w clearfix">
+        <div class="logo">
+            <a href="#"><img src="images/logo.jpg" alt="" height=""></a>
+        </div>
+        <div class="hottel">
+            <div class="hot_pic">
+                <img src="images/hot_tel.jpg" alt="">
+            </div>
+            <div class="hot_tel">
+                <p class="hot_time">客服热线(9:00-6:00)</p>
+                <p class="hot_num">400-618-9090</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="pop_info"></div>
+<script>
+    $.get("pop_info.html", function (res) {
+        $("#pop_info").html(res)
+    }, "html")
+</script>
+<div class="register">
+    <div class="register_box">
+        <div class="register_title">
+            <h2>密码找回</h2>
+            <span>已有账号？<a href="login.html" title="立即登录">立即登录</a></span>
+        </div>
+        <div class="reset_pw">
+            <div class="reset_step">
+                <ul class="flow_hidden">
+                    <li class="line red_bcolor"></li>
+                    <li><span class="name num">重置密码</span></li>
+                    <li class="line red_bcolor"></li>
+
+
+                </ul>
+
+            </div>
+            <form method="post" id="form_changes_pwd" action="">
+                <div class="register_cont email forget">
+                    <p>
+                        <span class="name">邮箱地址</span>
+                        <span> <input type="text" name="email" datatype="e" class="register_input" placeholder="请输入邮箱"
+                                      ajaxurl="/public/ajaxCheckEmail.html?r=Math.random()"></span>
+                        <span class="tip_box"><span class="Validform_checktip"></span></span>
+                    </p>
+                    <p>
+                        <span class="name">邮箱验证码</span>
+                        <span><input type="text" class="register_input" style="width: 140px;" name="verify" id="verify4"
+                                     datatype="s4-4" maxlength="6" nullmsg="请输入验证码" placeholder="邮箱验证码"
+                                     errormsg="请输入验证码！"></span>
+                        <span><button type="button" class="gray_button" id="get_verify"
+                        >获取邮箱验证码</button><span
+                                id="emai_verifycode"></span></span>
+                    </p>
+
+
+                    <p>
+                        <span class="name">新密码</span>
+                        <span> <input type="password" name="newPwd" datatype="e" class="register_input"
+                                      placeholder="请输入新密码"
+                        ></span>
+                        <span class="tip_box"><span class="Validform_checktip"></span></span>
+                    </p>
+                    <p>
+                        <span class="name">确认密码</span>
+                        <span> <input type="password" id="confirm_Pwd" name="confirmPwd" datatype="e"
+                                      class="register_input" placeholder="请输入确认密码"
+                        ></span>
+                        <span class="tip_box"><span id="confirmPwd"></span></span>
+                    </p>
+                    <p>
+                        <span class="name"></span>
+                        <input class="com_button red_button" type="submit" value="提交修改" id="commit_changes">
+                    </p>
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+<script>
+    function checkpwd() {
+        var $newPwd = $('input[name=newPwd]');
+        var $email_code = $("input[name=verify]").val();
+        if ($email_code == "" || $email_code == null) {
+            $('#emai_verifycode').html("<font color='red' >验证码不能为空</font>")
+            return false
+        }
+        var pwd = $newPwd.val();
+        console.log(pwd)
+        if (pwd != "" && pwd == $('#confirm_Pwd').val()) {
+            return true;
+        } else {
+            $('#confirmPwd').html("<font color='red' >两次输入密码不一致</font>")
+            return false
+        }
+
+    }
+
+    $('input[name=confirmPwd]').blur(function () {
+        checkpwd()
+    })
+
+    $('#form_changes_pwd').submit(function () {
+        var bl = checkpwd();
+        if (bl) {
+            var data = $(this).serialize();
+            $.ajax({
+                url: "userServlet?method=changePwd",
+                data: data,
+                async: false,
+                dataType: "html",
+                success: function (res) {
+                    console.log(res);
+                    if (res == 'success') {
+                        $('.toast__type').text("密码修改成功!")
+                        $('.toast__message').text("恭喜您,密码修改成功...2秒后跳转登录页面")
+                        console.log($('.toast__message'))
+                        $('.toast--blue').fadeIn(500).delay(2000).fadeOut(1000, function () {
+                            location.href = "login.html"
+                        });
+                    }
+                }
+            })
+        }
+        return false;
+    })
+
+</script>
+<div class="ui-widget-overlay ui-front" id="ui-widget-overlay" style="display: none"></div>
+<div class="pop-up" id="pop-up" style="display: none">&nbsp;获取邮箱验证码!
+    <div class="close-pop" onclick="close_pop()">×</div>
+    <div class="pop-content">
+        <p>让我们确定你不是机器人</p>
+        <div>验证码: <input id="verify_code_input" class="textinput" type="text" style="color: #333;" placeholder="请输入验证码">
+            <img id="verifyCode" src="/checkCodeServlet" onclick="changeVerify(this)"></div>
+        <span class="errormsg"></span>
+    </div>
+    <div class="pop-button">
+        <div class="ui-dialog-buttonset">
+            <button type="button" class="ui-button" role="button" onclick="close_pop()"><span
+                    class="ui-button-text">取消</span></button>
+            <button type="button" class="ui-button-blue ui-button" role="button" id="ui-button"><span
+                    class="ui-button-text">确定</span></button>
+        </div>
+    </div>
+</div>
+<script>
+    //发送邮件后的按钮禁止操作方法
+    function count_down() {
+        var $verify_btn = $('#get_verify');
+        console.log($verify_btn)
+        $verify_btn.css('cursor', 'default')
+        $verify_btn.prop('disabled', 'disabled');
+        var count = 60;
+        var timer = setInterval(function () {
+            count--;
+            $verify_btn.html(count + '秒后可点击')
+            if (count <= 0) {
+                $verify_btn.html('获取邮箱验证码')
+                $verify_btn.prop('disabled', '')
+                $verify_btn.removeAttr('style')
+                clearInterval(timer);
+            }
+        }, 1000);
+    }
+
+    var pop_flag = false;
+    var $em = $("input[name=email]");
+    $em.blur(function (e) {
+        if (e.relatedTarget == $('#get_verify')[0]) {
+            console.log('点击按钮触发的blur, 跳过');
+            return false;
+        }
+        validEmai();
+        return false;
+    });
+    $em.focus(function () {
+        $(".Validform_checktip")[0].innerHTML = "<font color='red' ></font>";
+    });
+
+    function validEmai() {
+        var email = $em.val();
+        var reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
+        var regResult = reg.test(email);
+        if (email != null && email != "" && regResult) {
+            $(".Validform_checktip")[0].innerHTML = "<font color='red' ></font>"
+            $.ajax({
+                type: "get",
+                url: "/userServlet?method=checkEmail&email=" + email,
+                async: false,
+                dataType: 'html',
+                success: function (res) {
+                    if (res == 'true') {
+                        pop_flag = false;
+                        $(".Validform_checktip")[0].innerHTML = "<font color='red' >邮箱不存在</font>"
+                    } else {
+                        pop_flag = true;
+                    }
+                }
+            });
+        } else {
+            pop_flag = false;
+            $(".Validform_checktip")[0].innerHTML = "<font color='red' >请输入正确的邮箱</font>"
+        }
+    }
+
+    $("#get_verify").click(function (e) {
+
+        console.log(pop_flag)
+        $em.blur();
+        if (pop_flag) {
+            changeVerify($('#verifyCode')[0])
+            document.getElementById("ui-widget-overlay").style.display = "";
+            document.getElementById("pop-up").style.display = "";
+            pop_flag = false;
+        }
+    });
+</script>
+<script>
+    $(function () {
+        $("#verify_code_input").blur(function (e) {
+            var code = $(this).val();
+            if (code == null || code == '') {
+                $('.errormsg').html('请输入验证码')
+            } else {
+                if (e.relatedTarget == $('#ui-button')[0]) {
+                    console.log('点击按钮触发的blur, 跳过');
+                    return false;
+                }
+                $.get("/userServlet?method=checkVerify&check=" + code, function (res) {
+                    if (res == 'true') {
+                        $('.errormsg').empty()
+                    } else {
+                        $('.errormsg').html('验证码输入错误')
+                    }
+                }, "html")
+            }
+        }).focus(function () {
+            $('.errormsg').empty()
+        })
+        $('#ui-button').click(function () {
+            var code = $('#verify_code_input').val();
+            if (code == null || code == '') {
+                $('.errormsg').html('请输入验证码')
+            } else {
+                $.ajax({
+                    url: "/userServlet?method=checkVerify&check=" + code,
+                    async: false,
+                    dataType: "text",
+                    success: function (res) {
+                        if (res == 'true') {
+                            $('.errormsg').empty()
+                            //此处可以发送邮件了
+                            var email = $em.val();
+                            $.get("/userServlet?method=sendemailcode&email=" + email, function () {
+                                console.log("邮件已经发送了")
+                            }, "text");
+                            count_down()
+                            close_pop();
+                        } else {
+                            $('.errormsg').html('验证码输入错误')
+                        }
+                    }
+
+                })
+            }
+        })
+    })
+
+    function changeVerify(img) {
+        img.src = 'checkCodeServlet?' + Math.random();
+    }
+
+    function close_pop() {
+        document.getElementById("ui-widget-overlay").style.display = "none";
+        document.getElementById("pop-up").style.display = "none";
+    }
+</script>
+<div class="footer">
+    <div class="w">
+        <div class="contact_us">
+            <div class="contact_link fl">
+                <dl>
+                    <dt>帮助中心</dt>
+                    <dd><a href="#" target="_blank">购物支付</a></dd>
+                    <dd><a href="#" target="_blank">合同保险</a></dd>
+                    <dd><a href="#" target="_blank">签证护照</a></dd>
+                    <dd><a href="#" target="_blank">常见问题</a></dd>
+                    <dd><a href="#" target="_blank">意见反馈</a></dd>
+                </dl>
+                <dl>
+                    <a href="#" style="color: #c2c2c2;" target="_blank">
+                        <dt>关于我们</dt>
+                    </a>
+                    <dd><a href="#" target="_blank">诚聘英才</a></dd>
+                    <dd><a href="#" target="_blank">业务合作</a></dd>
+                    <dd><a href="#" target="_blank">历史荣誉</a></dd>
+                    <dd><a href="#" target="_blank">营业网点</a></dd>
+                </dl>
+                <dl>
+                    <dt>联系我们</dt>
+                    <dd>客服热线：020-83192777</dd>
+                    <dd>质监热线：020-83701757</dd>
+                    <dd>公司汇款账号：4405 0142 0208 0000 0077</dd>
+                    <dd>开户名称：广州市金马国际旅行社有限公司</dd>
+                    <dd>开户行：中国建设银行 广州惠福西路支行</dd>
+                </dl>
+            </div>
+            <div class="contact_code fr">
+                <h1>
+                    <span>关注我们：</span>
+                    <a href="#" target="_blank" class="mr10" title="官方微博"><img
+                            src="//www.jinmalvyou.com/Public/theme/default/home/images/weibo.png"></a>
+                    <a href="#" target="_blank" title="天猫旗舰店"><img
+                            src="//www.jinmalvyou.com/Public/theme/default/home/images/tianmao.png"></a>
+                </h1>
+                <div class="two_code fl">
+                    <img src="//www.jinmalvyou.com/Public/theme/default/home/images/code_app.jpg">
+                    <p>APP预订更优惠</p>
+                </div>
+                <div class="two_code fl">
+                    <img src="//www.jinmalvyou.com/Public/theme/default/home/images/code_weixin.jpg">
+                    <p>关注微信</p>
+                </div>
+            </div>
+        </div>
+        <div style="padding:10px 0; text-align: center;color:#666;font-size:14px">
+            <p>广州市金马国际旅行社有限公司版权所有</p>
+            <p> 经营许可证号：L-GD-CJ00201 | ICP号：<a href="http://www.miitbeian.gov.cn" target="_blank"
+                                              style="color: #C2C2C2;">粤ICP备11082266号-1 </a></p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

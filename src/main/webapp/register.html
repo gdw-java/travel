@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>注册</title>
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" href="css/register.css">
+    <link rel="stylesheet" href="css/pop_info.css">
+    <!--导入jquery-->
+    <script src="js/jquery-3.3.1.js"></script>
+    <script src="js/jquery.validate.js"></script>
+    <script src="js/commons.js"></script>
+
+</head>
+<style>
+    .checked{
+        background: url("img/check_right.gif") no-repeat;
+        width: 16px;
+        height: 16px;
+        display: inline-block;}
+</style>
+<body>
+<!--弹窗-->
+<div class="toast toast--green">
+    <div class="toast__icon">
+        <svg version="1.1" class="toast__svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+<g><g><path d="M504.502,75.496c-9.997-9.998-26.205-9.998-36.204,0L161.594,382.203L43.702,264.311c-9.997-9.998-26.205-9.997-36.204,0    c-9.998,9.997-9.998,26.205,0,36.203l135.994,135.992c9.994,9.997,26.214,9.99,36.204,0L504.502,111.7    C514.5,101.703,514.499,85.494,504.502,75.496z"></path>
+	</g></g>
+    </svg>
+    </div>
+    <div class="toast__content">
+        <p class="toast__type">成功</p>
+        <p class="toast__message">任何有访问权限的人都可以查看你邀请的访问者。</p>
+    </div>
+    <div class="toast__close">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.642 15.642" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 15.642 15.642">
+            <path fill-rule="evenodd" d="M8.882,7.821l6.541-6.541c0.293-0.293,0.293-0.768,0-1.061  c-0.293-0.293-0.768-0.293-1.061,0L7.821,6.76L1.28,0.22c-0.293-0.293-0.768-0.293-1.061,0c-0.293,0.293-0.293,0.768,0,1.061  l6.541,6.541L0.22,14.362c-0.293,0.293-0.293,0.768,0,1.061c0.147,0.146,0.338,0.22,0.53,0.22s0.384-0.073,0.53-0.22l6.541-6.541  l6.541,6.541c0.147,0.146,0.338,0.22,0.53,0.22c0.192,0,0.384-0.073,0.53-0.22c0.293-0.293,0.293-0.768,0-1.061L8.882,7.821z"></path>
+        </svg>
+    </div>
+</div>
+<!--引入头部-->
+<div id="header"></div>
+<!-- 头部 end -->
+
+<div class="rg_layout">
+    <div class="rg_form clearfix">
+        <div class="rg_form_left">
+            <p>新用户注册</p>
+            <p>USER REGISTER</p>
+        </div>
+        <div class="rg_form_center">
+
+            <!--注册表单-->
+            <form id="registerForm" method="post">
+                <!--提交处理请求的标识符-->
+                <input type="hidden" name="action" value="register">
+                <table style="margin-top: 25px;">
+                    <tr>
+                        <td class="td_left">
+                            <label for="username">用户名</label>
+                        </td>
+                        <td class="td_right">
+                            <input type="text" id="username" name="username" placeholder="请输入账号">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_left">
+                            <label for="password">密码</label>
+                        </td>
+                        <td class="td_right">
+                            <input type="password" id="password" name="password" placeholder="请输入密码">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_left">
+                            <label for="email">Email</label>
+                        </td>
+                        <td class="td_right">
+                            <input type="text" id="email" name="email" placeholder="请输入正确的Email用以激活账号"><label for="email" generated="true" class="error" id="email-error"></label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_left">
+                            <label for="name">姓名</label>
+                        </td>
+                        <td class="td_right">
+                            <input type="text" id="name" name="name" placeholder="请输入真实姓名">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_left">
+                            <label for="telephone">手机号</label>
+                        </td>
+                        <td class="td_right">
+                            <input type="text" id="telephone" name="telephone" placeholder="请输入您的手机号">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_left">
+                            <label for="sex">性别</label>
+                        </td>
+                        <td class="td_right gender">
+                            <input type="radio" id="sex" name="sex" value="男" checked> 男
+                            <input type="radio" name="sex" value="女"> 女
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_left">
+                            <label for="birthday">出生日期</label>
+                        </td>
+                        <td class="td_right">
+                            <input type="date" id="birthday" name="birthday" placeholder="年/月/日">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_left">
+                            <label for="check">验证码</label>
+                        </td>
+                        <td class="td_right check">
+                            <input type="text" id="check" name="check" class="check">
+                            <img src="checkCodeServlet" height="32px" alt="" onclick="changeCheckCode(this)" style="float:left">
+                            <label for="check" generated="true" class="error" style="margin: 8px"></label>
+                            <script type="text/javascript">
+                                //图片点击事件
+                                function changeCheckCode(img) {
+                                    img.src = "checkCodeServlet?" + new Date().getTime();
+                                }
+                            </script>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_left">
+                        </td>
+                        <td class="td_right check">
+                            <input type="submit" class="submit" value="注册">
+                            <span id="msg" style="color: red;"></span>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <script>
+            // $("#email").blur(function () {
+            //     $.post("/userServlet?method=checkEmail",$("#email").val(),function (result) {
+            //         console.log(result);
+            //         if(!result) {
+            //             $("#email").next().text("email不可用")
+            //             $("#email").next().find(".error").removeClass("checked");
+            //
+            //         }else {
+            //             $("#email").next.addClass("checked")
+            //         }
+            //     },"html")
+            // })
+        </script>
+        <div class="rg_form_right">
+            <p>
+                已有账号？
+                <a href="login.html">立即登录</a>
+            </p>
+        </div>
+    </div>
+</div>
+<!--引入尾部-->
+<div id="footer"></div>
+<!--导入布局js，共享header和footer-->
+<script type="text/javascript" src="js/include.js"></script>
+<script>
+    //弹窗提示信息的关闭按钮点击事件
+    $(function () {
+        $('.toast__close').click(function (e) {
+            $('.toast').stop(true,true);
+            $('.toast').fadeOut(1000);
+            e.stopPropagation();
+            location.href="login.html"
+        })
+    })
+</script>
+<script>
+    //validate前端表单校验和表单数据提交
+    $(function () {
+        $("#registerForm").validate({
+            //配置校验规则
+            submitHandler: function (form) {  //ajax提交表单
+                var data=$(form).serialize(); //系列化表单
+                console.log(data);
+                $.ajax({
+                    type: 'post',
+                    async:false,
+                    url: "/userServlet?method=register",
+                    data:data,
+                    dataType:"json",
+                    success:function(res){
+                        console.log(res);
+                        var flag=res.registFlag;
+                        var $msgspan=$('#msg');
+                        if(flag=='0'&&res.msg=='success') {
+                            //location.href="register_ok.html"
+                            $('.toast__type').text("恭喜你注册成功!")
+                            $('.toast__message').text("请查收激活邮件并及时激活账户...2秒后跳转登录页面")
+                            console.log($('.toast__message'))
+                            $('.toast').fadeIn(500).delay(2000).fadeOut(1000,function () {
+                                location.href="login.html"
+                            });
+
+                        }else{
+                            $msgspan.text("注册参数非法");
+                        }
+                        switch(flag){
+                            case '1': $msgspan.text("用户名或密码不能为空");
+                                break;
+                            case '2': $msgspan.text("邮箱或手机号不能为空");
+                                break;
+                            case '3': $msgspan.text("邮箱或手机格式不正确");
+                                break;
+                            case '4': $msgspan.text("验证码不能为空");
+                                break;
+                            case '5': $msgspan.text("用户名已存在");
+                                break;
+                            case '6': $msgspan.text("邮箱已存在");
+                                break;
+                            case '7': $msgspan.text("验证码错误");
+                                break;
+                            case '8': $msgspan.text("生日不能为空");
+                                break;
+
+                        }
+
+                    }
+                });
+                return false; // 阻止表单自动提交事件
+            },
+            rules:{
+                username:{
+                    onkeyup:false,
+                    required:true,
+                    rangelength:[2,20],
+                    remote: {
+                        type: "post",
+                        url: "/userServlet?method=checkUName",
+                        data: {
+                            username: function() {
+                                return $("#username").val();
+                            }
+                        },
+                        dataType: "html",
+                        dataFilter: function(data, type) {
+                            if (data == "true")
+                                return true;
+                            else
+                                return false;
+                        }
+                    }
+
+                },
+                password: {
+                    required: true,
+                    minlength: 6
+                },
+                email:{
+                    required:true,
+                    email:true,
+                    remote: {
+                        type: "get",
+                        url: "/userServlet?method=checkEmail",
+                        data: {
+                            email: function() {
+                                return $("#email").val();
+                            }
+                        },
+                        dataType: "html",
+                        dataFilter: function(data, type) {
+                            if (data == "true")
+                                return true;
+                            else
+                                return false;
+                        }
+                    }
+
+                },
+                telephone:{
+                    phoneFmt:true
+                },
+                check:{
+                    required:true,
+                    remote:{
+                        type: "get",
+                        url: "/userServlet?method=checkVerify",
+                        data: {
+                            email: function() {
+                                return $("#email").val();
+                            }
+                        },
+                        dataType: "html",
+                        dataFilter: function(data, type) {
+                            if (data == "true")
+                                return true;
+                            else
+                                return false;
+                        }
+                    }
+
+
+                },
+                birthday:{
+                    required:true,
+                    dateISO:true,
+                }
+
+
+            },
+            //配置错误提示信息
+            messages:{
+                username:{
+                    required:"用户名不能为空!" ,
+                    rangelength:"用户名长度为2到20个字符",
+                    remote:"用户名已存在"
+                },
+                password: {
+                    required: "密码不能为空",
+                    minlength: "密码不能少于6位"
+                },
+                email:{
+                    required:"邮箱不能为空",
+                    email:"邮箱格式不正确",
+                    remote:"邮箱不可用"
+                },
+                check:{
+                    required:"验证码不能为空",
+                    remote:"验证码错误"
+                },
+                birthday:{
+                    required:"生日不能为空",
+                    dateISO:"请填写正确的生日格式"
+                }
+
+            },
+            errorClass:"error",
+            success: function(label) {  //表单验证成功后的回调函数
+                // set &nbsp; as text for IE
+                label.html("&nbsp;").addClass("checked");
+            },
+            highlight: function(element, errorClass) {  //验证不匹配时的回调函数
+
+                $(element).parent().find("." + errorClass).removeClass("checked");
+
+            }
+
+        })
+    })
+</script>
+
+
+</body>
+</html>

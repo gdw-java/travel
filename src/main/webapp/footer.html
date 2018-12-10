@@ -1,0 +1,144 @@
+ <!-- 尾部 start-->
+<div id="return">
+     <ul>
+         <li class="magnet-itme magnet">
+             <a href="javascript:;" class="magnet-link">
+                 <div class="magnet-icon">
+                     <i class="ic iconfont icon-cart"></i>
+                 </div>
+                 <div class="magnet-text">购物车</div>
+             </a>
+         </li>
+         <li class="magnet-itme">
+             <a href="javascript:;" class="magnet-link">
+                 <div class="magnet-icon">
+                     <i class="ico iconfont icon-APP1"></i>
+                 </div>
+                 <div class="magnet-text">&nbsp;</div>
+                 <div class="magnet-dow">
+                     <div class="magnet-dow-b">
+                         <img src="images/ewm.png" class="magnet-dow-img"/>
+                         <p class="magnet-dow-text">扫描下载黑马旅游APP</p>
+                     </div>
+                 </div>
+             </a>
+         </li>
+         <li class="magnet-itme magnet">
+             <a href="javascript:;" class="magnet-link" id="top_link">
+                 <div class="magnet-icon">
+                     <i class="ic iconfont icon-shouqi"></i>
+                 </div>
+                 <div class="magnet-text">回到顶部</div>
+             </a>
+         </li>
+     </ul>
+ </div>
+ <script>
+     function getStyle(obj,atr){
+         if(obj.currentStyle){
+             return (obj.currentStyle[atr]);
+         }else{
+             return (getComputedStyle(obj)[atr]);
+         }
+     }
+     function hide(obj){
+         clearInterval(obj.time);
+         var opa=getStyle(obj,'opacity');
+         obj.time=setInterval(function(){
+             opa-=0.01;
+             if(opa<0){
+                 opa=0;
+                 clearInterval(obj.time);
+                 obj.style.display='none';
+             }
+             obj.style.opacity=opa;
+         },5)
+     }
+     function show(obj){
+         clearInterval(obj.time);
+         var opa=parseFloat(getStyle(obj,'opacity'));
+         obj.time=setInterval(function(){
+             opa=opa+0.01;
+             if(opa>1){
+                 opa=1;
+                 clearInterval(obj.time);
+             }
+             obj.style.opacity=opa;
+             obj.style.display='block';
+         },7)
+     }
+     $(function () {
+             var oDiv=document.getElementById('return');
+             var time=null;
+             window.onscroll=function(){
+                 var toTop=document.body.scrollTop||document.documentElement.scrollTop;
+                 var height=document.documentElement.clientHeight;
+
+                 if(toTop>230){
+                     show(oDiv);
+                 }else{
+                     hide(oDiv);
+                 }if(toTop!=height){
+                     clearInterval(time);
+                 }
+             }
+
+             $('#top_link').click(function(){
+                 var time=null;
+                 clearInterval(time);
+                 time=setInterval(function(){
+                     var toTop=document.body.scrollTop||document.documentElement.scrollTop;//火狐用body获取，谷歌IE用documentElement（html）获取。
+                     speed=toTop/12;
+                     if(toTop<=0){
+                         clearInterval(time);
+                     }
+                     document.body.scrollTop-=speed;
+                     document.documentElement.scrollTop-=speed;
+                 },20)
+             })
+     })
+ </script>
+
+    <footer id="footer">
+        <div class="why_select">
+            <dl>
+                <dt class="fl">
+                    <img src="images/icon_1.jpg" alt="">
+                </dt>
+                <dd>
+                    <h1>产品齐全</h1>
+                    <h2>产品全自主选，随心买</h2>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="fl">
+                    <img src="images/icon_2.jpg" alt="">
+                </dt>
+                <dd>
+                    <h1>便利快捷</h1>
+                    <h2>24小时不打烊，随时买</h2>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="fl">
+                    <img src="images/icon_3.jpg" alt="">
+                </dt>
+                <dd>
+                    <h1>安全支付</h1>
+                    <h2>知名支付工具，放心买</h2>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="fl">
+                    <img src="images/icon_4.jpg" alt="">
+                </dt>
+                <dd style="margin-right:0px;">
+                    <h1>贴心服务</h1>
+                    <h2>客服全年无休，安心买</h2>
+                </dd>
+            </dl>
+        </div>
+        <div class="company">
+            <p>江苏传智播客教育科技股份有限公司 版权所有Copyright 2006-2018, All Rights Reserved 苏ICP备16007882</p>
+        </div>
+    </footer>
